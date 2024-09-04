@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Armin Namavari <arminn@stanford.edu>"]
 
 [dependencies]
+
+[lib]
+name = "rdiff"
+path = "src/main.rs"  # 确保库的入口文件为 main.rs
