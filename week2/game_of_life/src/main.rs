@@ -2,6 +2,7 @@ use nannou::prelude::*;
 use rand::Rng;
 use rdiff::grid::Grid;
 use std::env;
+use std::ops::Add;
 use std::process;
 
 const CELL_SIZE: f32 = 10.0; // 定义每个细胞的大小
@@ -32,26 +33,33 @@ struct Model {
 impl Model {
     fn new(size: usize, speed: usize) -> Model {
         let mut board = Grid::new(size, size);
-        randomize(&mut board);
+        board.randomize();
         Model { board, speed }
     }
 }
-fn randomize(grid: &mut Grid) {
-    let (rows, cols) = grid.size();
-    let mut rng = rand::thread_rng(); // 创建一个随机数生成器
-    for i in 0..rows {
-        for j in 0..cols {
-            let _ = grid.set(
-                i,
-                j,
-                match rng.gen_range(0..=10) {
-                    1 => 1,
-                    _ => 0,
-                },
-            );
+trait randomize {
+    fn randomize(&mut self);
+}
+impl randomize for Grid{
+    fn randomize(&mut self) {
+        let (rows, cols) = self.size();
+        let mut rng = rand::thread_rng(); // 创建一个随机数生成器
+        for i in 0..rows {
+            for j in 0..cols {
+                let _ = self.set(
+                    i,
+                    j,
+                    match rng.gen_range(0..=10) {
+                        1 => 1,
+                        _ => 0,
+                    },
+                );
+            }
         }
     }
 }
+
+
 fn count_live_neighbors(x: usize, y: usize, grid:&Grid) -> usize {
     let mut count = 0;
     let (rows, cols) = grid.size();
